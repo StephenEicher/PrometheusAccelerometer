@@ -49,23 +49,16 @@ void StartRecording() {
     cout << F("Checking for previous flights...\n");
     
     // Create a New File
-    for (int i = 0; i <= 99; i++){
-      char FileNum[3] = "00";  
-      itoa(i, FileNum, 10);
-      if (i < 10){
-        fileName[6] = FileNum[0];
-      } else if (i >= 10) {
-        fileName[6] = FileNum[1];
-        fileName[5] = FileNum[0];
-      } 
+    for (int i = 0; i < 100; i++){
+      fileName[5] = '0' + i / 10;
+      fileName[6] = '0' + i % 10;
     
+      // Check If The File Already Exists
       if (sd.exists(fileName)) {
-        //trial already exists
         cout << F("Flight number: ") << i << F(" already exists\n");
       }
-      else {  
+      else 
         break;
-      }  
     }
     
     cout << F("Creating file: ") << fileName << F("\n");
