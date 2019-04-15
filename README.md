@@ -10,3 +10,4 @@
 - Arming procedures
 - Refactor the code for organization
     - in progress
+ - Note: The Adalogger also has an onboard RTC (Real Time Clock) chip that might be more reliable than micros but may also slow things down
