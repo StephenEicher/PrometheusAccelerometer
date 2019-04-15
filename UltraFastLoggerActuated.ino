@@ -1,28 +1,41 @@
+//Accelerometer Libraries
 #include "SPI.h"
 #include "Communication.h"
 #include "adxl372.h"
-//#include <SD.h>
+
+//SD libraries
 #include "SdFat.h"
 #include "sdios.h"
+
+
 #define CS_PIN 10
 
+//Initialize Accelerometer Object
 struct adxl372_device adxl372;
 unsigned char devId;
 AccelTriplet_t accel_data;
-const int SD_CHIP_SELECT = 4;
-const int AC_CHIP_SELECT = 10;
-SdFat sd;
-// test file
-SdFile file;
-unsigned long startTime;
-char fileName[13] = "Trial00.txt";
-  
+
+//Struct to hold Accelerometer Data
 typedef struct {
   float x;
   float y;
   float z;
 }acceleration_G_t;
+
 acceleration_G_t data_G;
+
+//Manifest Constants
+const int SD_CHIP_SELECT = 4;
+const int AC_CHIP_SELECT = 10;
+
+// Initialize SdFat Object and file to write to
+SdFat sd;
+SdFile file;
+unsigned long startTime;
+char fileName[13] = "Trial00.txt"; //base file name
+  
+
+
 int temp = 0;
 
 // Serial output stream
@@ -35,6 +48,7 @@ void StartRecording() {
     cout << F("Data recording sequence intiated\n");
     cout << F("Checking for previous flights...\n");
     
+    // Create a New File
     for (int i = 0; i <= 99; i++){
       char FileNum[3] = "00";  
       itoa(i, FileNum, 10);
@@ -60,10 +74,9 @@ void StartRecording() {
     file.open(fileName, O_CREAT | O_WRITE);
     bool closefile = false;
     uint32_t m = micros();
-    bool alwaystrue = true;
     int streak = 0;
     int blinkcount = 0;
-    while (alwaystrue){
+    while (true){
       adxl372_Get_Accel_data(&adxl372, &accel_data);  
       /*Transform in G values*/
       data_G.x = (float)accel_data.x * 100 / 1000;
