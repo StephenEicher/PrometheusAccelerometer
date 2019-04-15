@@ -27,7 +27,7 @@ acceleration_G_t data_G; //Accelerometer Object
 // Manifest Constants
 const int SD_CHIP_SELECT = 4;
 const int AC_CHIP_SELECT = 10;
-const int FLIGHT_THRESHOLD = 0.5; //specify a threshold at which we can say flight has been detected
+const int FLIGHT_THRESHOLD = 1.0; //specify a threshold at which we can say flight has been detected
 
 // Initialize SdFat Object and a File Object
 SdFat sd;
@@ -47,31 +47,23 @@ void StartRecording() {
     cout << F("Data recording sequence intiated\n");
     cout << F("Checking for previous flights...\n");
     
-    //Create a New File
-    for (int = 0; i <= 99; i++){
-      char FileNum[3] = "00";  
-      itoa(i, FileNum, 10);
-      if (i < 10){
-        fileName[6] = FileNum[0];
-      } else if (i >= 10) {
-        fileName[6] = FileNum[1];
-        fileName[5] = FileNum[0];
-      } 
+     // Create a New File
+    for (int i = 0; i < 100; i++){
+      fileName[5] = '0' + i / 10;
+      fileName[6] = '0' + i % 10;
     
+      // Check If The File Already Exists
       if (sd.exists(fileName)) {
-        //trial already exists
         cout << F("Flight number: ") << i << F(" already exists\n");
       }
-      else {  
+      else 
         break;
-      }  
     }
     
     cout << F("Creating file: ") << fileName << F("\n");
-    //cout << F("Press any key to stop...\n");
-    
+      
     file.open(fileName, O_CREAT | O_WRITE);
-    uint32_t m = micros();
+    uint32_t m = micros(); 
     int streak = 0;
     int blinkcount = 0;
 
@@ -88,6 +80,10 @@ void StartRecording() {
         file.printField(data_G.x, '\t');
         file.printField(data_G.y, '\t');
         file.printField(data_G.z, '\n');
+
+        cout << F("x: ") << data_G.x << F("g\t");
+        cout << F("y: ") << data_G.y << F("g\t");
+        cout << F("z: ") << data_G.z << F("g\n");
       }
     
       //cout << F("x: ") << data_G.x << F("g\n");
@@ -95,6 +91,7 @@ void StartRecording() {
       //cout << F("z: ") << data_G.z << F("g\n");
       //m = micros() - m;
       //cout << F("PrintLatency: ") << m << F("usec\n");
+      
       if (digitalRead(12) == 1){
     
       //cout << F("The current streak is: ") << streak << F("\n");
@@ -125,7 +122,7 @@ void StartRecording() {
 
 //-------------------------------------------------------------------------------
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 //  while (!Serial){
 //    ;
 //  }
@@ -195,7 +192,8 @@ void loop() {
   } 
   else
   {
-    cout << F("Switch Open\n");
+    cout << F("Switch Closed\n");
   }
+
 
 }
