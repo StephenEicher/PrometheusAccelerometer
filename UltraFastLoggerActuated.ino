@@ -76,9 +76,9 @@ void StartRecording() {
       data_G.y = (float)accel_data.y * 100 / 1000;
       data_G.z = (float)accel_data.z * 100 / 1000;
       file.printField((micros() - m), '\t');
-      file.printField(data_G.x, '\t');
-      file.printField(data_G.y, '\t');
-      file.printField(data_G.z, '\n');
+      file.printField(data_G.x, ',\t'); // experimenting with adding a comma before the tab/newline to make matlab importing easier
+      file.printField(data_G.y, ',\t');
+      file.printField(data_G.z, ',\n');
     
       //cout << F("x: ") << data_G.x << F("g\n");
       //cout << F("y: ") << data_G.y << F("g\n");
