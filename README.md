@@ -11,3 +11,7 @@
 - Refactor the code for organization
     - in progress
  - Note: The Adalogger also has an onboard RTC (Real Time Clock) chip that might be more reliable than micros but may also slow things down
+ - Note: Due to the large amount of data, it is easiest to use the included matlab script to generate plots.
+ 
+ 
+
