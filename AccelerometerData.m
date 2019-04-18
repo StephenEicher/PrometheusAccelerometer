@@ -9,6 +9,11 @@ dataEnd = 5; %This variable is roughly the time at which the plots will end
 fullData = false; %if you set fullData to true, the dataStart and dataEnd
 %start points will be overridden and the script will plot the entire range
 %of collected data
+recommendedBounds = true; %if you set this variable to true, the script will
+%generate the plot boundaries automatically based on where the maximum
+%accel is detected to occur. NOTE: THIS GETS OVERRIDEN BY fullData;
+%Also note: this will only be useful when we're trying to inspect where a spike
+%of acceleration occurs
 
 plotRaw = false; %if you set plotRaw to true, the plot will be populated by
 %raw, unsmoothed data instead of smoothed data;
@@ -49,6 +54,23 @@ if fullData %Check if fullData is set to true; if set to true, plot the whole da
 else %If fullData is not set to true, set the start/end points based on the user inputs
     pStart = ceil((size(time_s) / max(time_s)) * dataStart); %Entry from which the plots start
     pFinish = ceil((size(time_s) / max(time_s)) * dataEnd); %Entry at which the plots end
+end
+
+if (recommendedBounds && ~fullData)
+    [~, xMaxIndex] = max(xData); %Find the index in the array of the maximum
+    [~, yMaxIndex] = max(yData);
+    [~, zMaxIndex] = max(zData);
+    [~, magMaxIndex] = max(magnitude);
+    %Now, take the average index; this should hopefully give us the middle
+    %of where the maximum across all three occurs
+    maxIndices = [xMaxIndex yMaxIndex zMaxIndex magMaxIndex];
+    meanIndex = floor(mean(maxIndices));
+    pMid = floor(meanIndex);
+    
+    pStart = pMid - ceil((size(time_s, 1) / max(time_s)) * 0.5);
+    pFinish = pMid + ceil((size(time_s, 1) / max(time_s)) * 0.5);
+    
+    %plot forward and after 0.5 seconds
 end
 %Create a combined plot of all of the data from pStart to pFinish;
 
